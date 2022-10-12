@@ -1,6 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
 <WwiseDocument Type="WorkUnit" ID="{962E2E29-BF90-4BE4-AB9A-4623E076AAF0}" SchemaVersion="103">
 	<InteractiveMusic>
-		<WorkUnit Name="Default Work Unit" ID="{962E2E29-BF90-4BE4-AB9A-4623E076AAF0}" PersistMode="Standalone"/>
+		<WorkUnit Name="Default Work Unit" ID="{962E2E29-BF90-4BE4-AB9A-4623E076AAF0}" PersistMode="Standalone">
+			<ChildrenList>
+				<MusicSegment Name="Rappahannock - emancipator - Loci Records [2017]_new" ID="{BA28F909-C4B7-4587-B97D-81B43E07F434}" ShortID="750385887">
+					<PropertyList>
+						<Property Name="EndPosition" Type="Real64" Value="314398.185941043"/>
+						<Property Name="Volume" Type="Real64">
+							<ValueList>
+								<Value>-6</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CA56D5C9-5C30-4477-A4CA-170D982A528F}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{40ECE93A-F1F7-4283-97D2-CC4971DA1B73}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<MusicTrack Name="Rappahannock - emancipator - Loci Records [2017]_new" ID="{2C4C2D87-AAD3-417F-AE63-050E0B52C342}" ShortID="94444825">
+							<ReferenceList>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{40ECE93A-F1F7-4283-97D2-CC4971DA1B73}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="Rappahannock - emancipator - Loci Records [2017]_new" ID="{BEA5AB96-EF77-42A8-A646-8DE7EF2CEE69}">
+									<Language>SFX</Language>
+									<AudioFile>Rappahannock - emancipator - Loci Records [2017]_new.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="300225879"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<TransitionList>
+								<MusicTransition Name="Root" ID="{071D16D5-9FD0-412A-92CE-904F7CF3B42D}">
+									<PropertyList>
+										<Property Name="IsFolder" Type="bool" Value="True"/>
+									</PropertyList>
+									<TransitionInfo/>
+								</MusicTransition>
+							</TransitionList>
+							<ObjectLists>
+								<ObjectList Name="Sequences">
+									<Reference>
+										<Local>
+											<MusicTrackSequence Name="" ID="{748985B7-59BD-48DD-B514-1EED38FF275B}">
+												<ObjectLists>
+													<ObjectList Name="Clips">
+														<Reference>
+															<Local>
+																<MusicClip Name="Rappahannock - emancipator - Loci Records [2017]_new" ID="{AF589002-6FF9-4CF4-B821-D2F41F7D755A}">
+																	<PropertyList>
+																		<Property Name="EndTrimOffset" Type="Real64" Value="314398.185941043"/>
+																		<Property Name="FadeInMode" Type="int16" Value="0"/>
+																		<Property Name="FadeOutMode" Type="int16" Value="0"/>
+																	</PropertyList>
+																	<AudioSourceRef Name="Rappahannock - emancipator - Loci Records [2017]_new" ID="{BEA5AB96-EF77-42A8-A646-8DE7EF2CEE69}"/>
+																</MusicClip>
+															</Local>
+														</Reference>
+													</ObjectList>
+												</ObjectLists>
+											</MusicTrackSequence>
+										</Local>
+									</Reference>
+								</ObjectList>
+							</ObjectLists>
+						</MusicTrack>
+					</ChildrenList>
+					<ObjectLists>
+						<ObjectList Name="Cues">
+							<Reference>
+								<Local>
+									<MusicCue Name="Entry Cue" ID="{65683137-1E6A-498F-94D8-7577BF79886E}"/>
+								</Local>
+							</Reference>
+							<Reference>
+								<Local>
+									<MusicCue Name="Exit Cue" ID="{D97ED73F-048B-4D26-BAD0-57B5B6420696}">
+										<PropertyList>
+											<Property Name="CueType" Type="int16" Value="1"/>
+											<Property Name="TimeMs" Type="Real64" Value="314398.185941043"/>
+										</PropertyList>
+									</MusicCue>
+								</Local>
+							</Reference>
+						</ObjectList>
+					</ObjectLists>
+				</MusicSegment>
+			</ChildrenList>
+		</WorkUnit>
 	</InteractiveMusic>
 </WwiseDocument>
