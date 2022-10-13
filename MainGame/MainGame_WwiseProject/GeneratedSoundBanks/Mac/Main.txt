@@ -1,0 +1,6 @@
+Event	ID	Name			Wwise Object Path	Notes
+	2932040671	Play_Music			\Default Work Unit\Play_Music	
+
+In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
+	300225879	Rappahannock - emancipator - Loci Records [2017]_new	S:\SourceTreeFolder\CosmicHorror\MainGame\MainGame_WwiseProject\.cache\Mac\SFX\Rappahannock - emancipator - Loci Records [2017]_new_D79FB2B7.wem		\Interactive Music Hierarchy\Default Work Unit\Rappahannock - emancipator - Loci Records [2017]_new\Rappahannock - emancipator - Loci Records [2017]_new		27729984
+

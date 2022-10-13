@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SoundBanksInfo Platform="Mac" BasePlatform="Mac" SchemaVersion="12" SoundbankVersion="140">
+	<RootPaths>
+		<ProjectRoot>S:\SourceTreeFolder\CosmicHorror\MainGame\MainGame_WwiseProject\</ProjectRoot>
+		<SourceFilesRoot>S:\SourceTreeFolder\CosmicHorror\MainGame\MainGame_WwiseProject\.cache\Mac\</SourceFilesRoot>
+		<SoundBanksRoot>S:\SourceTreeFolder\CosmicHorror\MainGame\MainGame_WwiseProject\GeneratedSoundBanks\Mac\</SoundBanksRoot>
+		<ExternalSourcesInputFile></ExternalSourcesInputFile>
+		<ExternalSourcesOutputRoot>S:\SourceTreeFolder\CosmicHorror\MainGame\MainGame_WwiseProject\GeneratedSoundBanks\Mac</ExternalSourcesOutputRoot>
+	</RootPaths>
+	<DialogueEvents/>
+	<StreamedFiles/>
+	<MediaFilesNotInAnyBank/>
+	<SoundBanks>
+		<SoundBank Id="1355168291" Language="SFX" Hash="2754342975">
+			<ObjectPath>Init</ObjectPath>
+			<ShortName>Init</ShortName>
+			<Path>Init.bnk</Path>
+		</SoundBank>
+		<SoundBank Id="3161908922" Language="SFX" Hash="899895144">
+			<ObjectPath>\SoundBanks\Default Work Unit\Main</ObjectPath>
+			<ShortName>Main</ShortName>
+			<Path>Main.bnk</Path>
+			<IncludedEvents>
+				<Event Id="2932040671" Name="Play_Music" ObjectPath="\Events\Default Work Unit\Play_Music" DurationType="OneShot" DurationMin="314.398193" DurationMax="314.398193">
+					<IncludedMemoryFiles>
+						<File Id="300225879" Language="SFX">
+							<ShortName>Rappahannock - emancipator - Loci Records [2017]_new.wav</ShortName>
+							<Path>SFX\Rappahannock - emancipator - Loci Records [2017]_new_D79FB2B7.wem</Path>
+						</File>
+					</IncludedMemoryFiles>
+				</Event>
+			</IncludedEvents>
+			<IncludedMemoryFiles>
+				<File Id="300225879" Language="SFX">
+					<ShortName>Rappahannock - emancipator - Loci Records [2017]_new.wav</ShortName>
+					<Path>SFX\Rappahannock - emancipator - Loci Records [2017]_new_D79FB2B7.wem</Path>
+				</File>
+			</IncludedMemoryFiles>
+		</SoundBank>
+	</SoundBanks>
+</SoundBanksInfo>
