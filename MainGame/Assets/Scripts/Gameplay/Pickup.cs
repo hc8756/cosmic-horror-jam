@@ -70,11 +70,6 @@ namespace Unity.FPS.Gameplay
             if (m_HasPlayedFeedback)
                 return;
 
-            if (PickupSfx)
-            {
-                AudioUtility.CreateSFX(PickupSfx, transform.position, AudioUtility.AudioGroups.Pickup, 0f);
-            }
-
             if (PickupVfxPrefab)
             {
                 var pickupVfxInstance = Instantiate(PickupVfxPrefab, transform.position, Quaternion.identity);

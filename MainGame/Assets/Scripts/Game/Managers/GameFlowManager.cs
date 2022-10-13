@@ -74,7 +74,6 @@ namespace Unity.FPS.Game
                 var audioSource = gameObject.AddComponent<AudioSource>();
                 audioSource.clip = VictorySound;
                 audioSource.playOnAwake = false;
-                audioSource.outputAudioMixerGroup = AudioUtility.GetAudioGroup(AudioUtility.AudioGroups.HUDVictory);
                 audioSource.PlayScheduled(AudioSettings.dspTime + DelayBeforeWinMessage);
 
                 Debug.Log("Player won! Maybe call an event or something?");

@@ -26,9 +26,6 @@ namespace Unity.FPS.UI
         [Tooltip("Toggle component for framerate display")]
         public Toggle FramerateToggle;
 
-        [Tooltip("GameObject for the controls")]
-        public GameObject ControlImage;
-
         PlayerInputHandler m_PlayerInputsHandler;
         Health m_PlayerHealth;
         FramerateCounter m_FramerateCounter;
@@ -78,14 +75,7 @@ namespace Unity.FPS.UI
             if (Input.GetButtonDown(GameConstants.k_ButtonNamePauseMenu)
                 || (MenuRoot.activeSelf && Input.GetButtonDown(GameConstants.k_ButtonNameCancel)))
             {
-                if (ControlImage.activeSelf)
-                {
-                    ControlImage.SetActive(false);
-                    return;
-                }
-
                 SetPauseMenuActivation(!MenuRoot.activeSelf);
-
             }
 
             if (Input.GetAxisRaw(GameConstants.k_AxisNameVertical) != 0)
@@ -146,9 +136,5 @@ namespace Unity.FPS.UI
             m_FramerateCounter.UIText.gameObject.SetActive(newValue);
         }
 
-        public void OnShowControlButtonClicked(bool show)
-        {
-            ControlImage.SetActive(show);
-        }
     }
 }

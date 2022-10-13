@@ -178,8 +178,6 @@ namespace Unity.FPS.Game
                 m_ContinuousShootAudioSource = gameObject.AddComponent<AudioSource>();
                 m_ContinuousShootAudioSource.playOnAwake = false;
                 m_ContinuousShootAudioSource.clip = ContinuousShootLoopSfx;
-                m_ContinuousShootAudioSource.outputAudioMixerGroup =
-                    AudioUtility.GetAudioGroup(AudioUtility.AudioGroups.WeaponShoot);
                 m_ContinuousShootAudioSource.loop = true;
             }
 
@@ -211,8 +209,6 @@ namespace Unity.FPS.Game
 
             m_PhysicalAmmoPool.Enqueue(nextShell);
         }
-
-        void PlaySFX(AudioClip sfx) => AudioUtility.CreateSFX(sfx, transform.position, AudioUtility.AudioGroups.WeaponShoot, 0.0f);
 
 
         void Reload()
