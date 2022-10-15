@@ -8,6 +8,19 @@ namespace Unity.FPS.Gameplay
 {
     public class PlayerInventoryManager : MonoBehaviour
     {
+        
+        [Header("Weapon Bob")]
+        [Tooltip("Frequency at which the weapon will move around in the screen when the player is in movement")]
+        public float BobFrequency = 10f;
+
+        [Tooltip("How fast the weapon bob is applied, the bigger value the fastest")]
+        public float BobSharpness = 10f;
+
+        [Tooltip("Distance the weapon bobs when not aiming")]
+        public float DefaultBobAmount = 0.05f;
+
+
+
         public PlayerInventoryData PlayerInventoryData;
         public List<ItemController> StartingItems = new List<ItemController>();
         
@@ -23,6 +36,8 @@ namespace Unity.FPS.Gameplay
         float _timeStartedItemSwitch;
         int _newItemToSwitchTo;
         
+        float _weaponBobFactor;
+
         void Start()
         {
             _subsystems = GetComponents<InventorySystem>();
@@ -33,42 +48,36 @@ namespace Unity.FPS.Gameplay
                 system.Initialize(PlayerInventoryData);
             }
 
-
+            _inputHandler = gameObject.GetComponentOrThrow<PlayerInputHandler>();
+            _playerCharacterController = gameObject.GetComponentOrThrow<PlayerCharacterController>();
+            
             PlayerInventoryData.ActiveItemIndex = -1;
             PlayerInventoryData.CurrentItemSwitchState = ItemSwitchState.Down;
-
-            _inputHandler = GetComponent<PlayerInputHandler>();
-            DebugUtility.HandleErrorIfNullGetComponent<PlayerInputHandler, PlayerWeaponsManager>(_inputHandler, this, gameObject);
-
-            _playerCharacterController = GetComponent<PlayerCharacterController>();
-            DebugUtility.HandleErrorIfNullGetComponent<PlayerCharacterController, PlayerWeaponsManager>(_playerCharacterController, this, gameObject);
-
+            
             foreach (var item in StartingItems)
             {
                 AddItem(item);
             }
-            
+
             // Switch weapon in ascending order, so switch to first weapon
             SwitchItem(true);
         }
         
         void Update()
         {
-            ItemSwitchState switchState = PlayerInventoryData.CurrentItemSwitchState;
-
-            ItemController currentlyEquippedItem = PlayerInventoryData.GetActiveItem();
-            if(currentlyEquippedItem == null) return;
+            ItemController activeItem = PlayerInventoryData.GetActiveItem();
 
             bool canSwitchItem = true;
-            
+
             foreach(InventorySystem subsystem in _subsystems)
             {
-                if(subsystem.SupportsItemType(currentlyEquippedItem))
+                if(subsystem.SupportsItemType(activeItem))
                 {
-                    subsystem.OnActiveItemUpdate(currentlyEquippedItem);
+                    if(!subsystem.CanSwitchItem(activeItem)) canSwitchItem = false;
+    
+                    subsystem.OnActiveItemUpdate(activeItem);
+                    break;
                 }
-                
-                if(!subsystem.CanSwitchItem(currentlyEquippedItem)) canSwitchItem = false;
             }
 
             // weapon switch handling - we can switch as long as a few things are true
@@ -80,18 +89,18 @@ namespace Unity.FPS.Gameplay
                 {
                     bool switchUp = itemSwitchDirection > 0;
                     SwitchItem(switchUp);
-
-                    return;
                 }
+                else
+                {
+                    // itemswitchrection was zero so go off of keys now
+                    itemSwitchDirection = _inputHandler.GetSelectWeaponInput();
 
-                // itemswitchrection was zero so go off of keys now
-                itemSwitchDirection = _inputHandler.GetSelectWeaponInput();
-
-                if (itemSwitchDirection == 0) return;
-
-                if (PlayerInventoryData.GetItemAtSlotIndex(itemSwitchDirection - 1) != null)
-                    SwitchToItemIndex(itemSwitchDirection - 1);
-
+                    if (itemSwitchDirection != 0)
+                    {
+                        if (PlayerInventoryData.GetItemAtSlotIndex(itemSwitchDirection - 1) != null)
+                            SwitchToItemIndex(itemSwitchDirection - 1);
+                    }
+                }
             }
         }
 
@@ -128,7 +137,43 @@ namespace Unity.FPS.Gameplay
 
         private void LateUpdate()
         {
+            UpdateItemBob();
             UpdateItemSwitching();
+        }
+
+        void UpdateItemBob()
+        {
+            if (Time.deltaTime > 0f)
+            {
+                Vector3 playerCharacterVelocity =
+                    (_playerCharacterController.transform.position - PlayerInventoryData.LastCharacterPosition) / Time.deltaTime;
+
+                // calculate a smoothed weapon bob amount based on how close to our max grounded movement velocity we are
+                float characterMovementFactor = 0f;
+                if (_playerCharacterController.IsGrounded)
+                {
+                    characterMovementFactor =
+                        Mathf.Clamp01(playerCharacterVelocity.magnitude /
+                                      (_playerCharacterController.MaxSpeedOnGround *
+                                       _playerCharacterController.SprintSpeedModifier));
+                }
+
+                _weaponBobFactor =
+                    Mathf.Lerp(_weaponBobFactor, characterMovementFactor, BobSharpness * Time.deltaTime);
+
+                // Calculate vertical and horizontal weapon bob values based on a sine function
+                float bobAmount = DefaultBobAmount * PlayerInventoryData.BobMultiplier;
+                float frequency = BobFrequency;
+                float hBobValue = Mathf.Sin(Time.time * frequency) * bobAmount * _weaponBobFactor;
+                float vBobValue = ((Mathf.Sin(Time.time * frequency * 2f) * 0.5f) + 0.5f) * bobAmount *
+                                  _weaponBobFactor;
+
+                // Apply weapon bob
+                PlayerInventoryData.WeaponBobLocalPosition.x = hBobValue;
+                PlayerInventoryData.WeaponBobLocalPosition.y = Mathf.Abs(vBobValue);
+
+                PlayerInventoryData.LastCharacterPosition = _playerCharacterController.transform.position;
+            }
         }
 
         // Updates the animated transition of switching items
@@ -167,7 +212,9 @@ namespace Unity.FPS.Gameplay
                     foreach(InventorySystem subsystem in _subsystems)
                     {
                         if(subsystem.SupportsItemType(newWeapon))
+                        {
                             subsystem.SwitchToItem(newWeapon);
+                        }
                     }
 
                     if (newWeapon)
@@ -187,9 +234,16 @@ namespace Unity.FPS.Gameplay
                 }
             }
 
-            foreach(InventorySystem system in _subsystems)
+            // Handle moving the weapon socket position for the animated weapon switching
+            if (PlayerInventoryData.CurrentItemSwitchState == ItemSwitchState.PutDownPrevious)
             {
-                system.HandleItemTransitionMovements(PlayerInventoryData.CurrentItemSwitchState, switchingTimeFactor);
+                PlayerInventoryData.WeaponMainLocalPosition = Vector3.Lerp(PlayerInventoryData.DefaultWeaponPosition.localPosition,
+                    PlayerInventoryData.DownWeaponPosition.localPosition, switchingTimeFactor);
+            }
+            else if (PlayerInventoryData.CurrentItemSwitchState == ItemSwitchState.PutUpNew)
+            {
+                PlayerInventoryData.WeaponMainLocalPosition = Vector3.Lerp(PlayerInventoryData.DownWeaponPosition.localPosition,
+                    PlayerInventoryData.DefaultWeaponPosition.localPosition, switchingTimeFactor);
             }
         }
 
@@ -197,30 +251,42 @@ namespace Unity.FPS.Gameplay
         // Could be changed to switch no matter what, allowing duplicate items
         public void SwitchToItemIndex(int newWeaponIndex, bool force = false)
         {
-            if (!(force || (newWeaponIndex != PlayerInventoryData.ActiveItemIndex && newWeaponIndex >= 0))) return;
-
-            // Store data related to weapon switching animation
-            _newItemToSwitchTo = newWeaponIndex;
-            _timeStartedItemSwitch = Time.time;
-
-            // TODO track acitve susbsytem
-            foreach(InventorySystem subsystem in _subsystems)
+            if (force || (newWeaponIndex != PlayerInventoryData.ActiveItemIndex && newWeaponIndex >= 0))
             {
-                ItemController currentlyEquipped = PlayerInventoryData.GetActiveItem();
+                // Store data related to weapon switching animation
+                _newItemToSwitchTo = newWeaponIndex;
+                _timeStartedItemSwitch = Time.time;
 
-                // Handle case of switching to a valid weapon for the first time (simply put it up without putting anything down first)
-                if (currentlyEquipped == null)
-                {
-                    PlayerInventoryData.WeaponMainLocalPosition = PlayerInventoryData.DownWeaponPosition.localPosition;
-                    PlayerInventoryData.CurrentItemSwitchState = ItemSwitchState.PutUpNew;
-                    PlayerInventoryData.ActiveItemIndex = _newItemToSwitchTo;
+                ItemController newWeapon = PlayerInventoryData.GetItemAtSlotIndex(_newItemToSwitchTo);
 
-                    ItemController newWeapon = PlayerInventoryData.GetItemAtSlotIndex(_newItemToSwitchTo);
-                }
-                // otherwise, remember we are putting down our current weapon for switching to the next one
-                else
+                // TODO track acitve susbsytem
+                foreach(InventorySystem subsystem in _subsystems)
                 {
-                    PlayerInventoryData.CurrentItemSwitchState = ItemSwitchState.PutDownPrevious;
+                    if(subsystem.SupportsItemType(newWeapon))
+                    {
+                        ItemController currentlyEquipped = PlayerInventoryData.GetActiveItem();
+
+                        // Handle case of switching to a valid weapon for the first time (simply put it up without putting anything down first)
+                        if (currentlyEquipped == null)
+                        {
+                            PlayerInventoryData.WeaponMainLocalPosition = PlayerInventoryData.DownWeaponPosition.localPosition;
+                            PlayerInventoryData.CurrentItemSwitchState = ItemSwitchState.PutUpNew;
+                            PlayerInventoryData.ActiveItemIndex = _newItemToSwitchTo;
+
+                            if (newWeapon != null)
+                            {
+                                Debug.Log("Equipping new item");
+                                newWeapon.Equip(true);
+                            }
+                        }
+                        // otherwise, remember we are putting down our current weapon for switching to the next one
+                        else
+                        {
+                            PlayerInventoryData.CurrentItemSwitchState = ItemSwitchState.PutDownPrevious;
+                        }
+
+                        return;
+                    }
                 }
             }
         }
@@ -253,10 +319,7 @@ namespace Unity.FPS.Gameplay
 
                     PlayerInventoryData.Inventory[i] = weaponInstance;
 
-                    foreach(InventorySystem system in _subsystems)
-                    {
-                        system.OnAddItem(weaponInstance, i);
-                    }
+                    OnAddItem(weaponInstance, i);
 
                     return true;
                 }
@@ -271,7 +334,31 @@ namespace Unity.FPS.Gameplay
             return false;
         }
 
-        public bool RemoveWeapon(ItemController itemInstance)
+        private void OnAddItem(ItemController item, int index)
+        {
+            foreach(InventorySystem system in _subsystems)
+            {
+                if(system.SupportsItemType(item))
+                {
+                    system.OnAddItem(item, index);
+                    return;
+                }
+            }
+        }
+
+        private void OnRemoveItem(ItemController item, int index)
+        {
+            foreach(InventorySystem system in _subsystems)
+            {
+                if(system.SupportsItemType(item))
+                {
+                    system.OnRemoveItem(item, index);
+                    return;
+                }
+            }
+        }
+
+        public bool RemoveItem(ItemController itemInstance)
         {
             // Look through our slots for that weapon
             for (int i = 0; i < PlayerInventoryData.Inventory.Length; i++)
@@ -280,11 +367,7 @@ namespace Unity.FPS.Gameplay
 
                 PlayerInventoryData.Inventory[i] = null;
                 
-                // Notify systems
-                foreach(InventorySystem subsystem in _subsystems)
-                {
-                    subsystem.OnRemoveItem(itemInstance, i);
-                }
+                OnRemoveItem(itemInstance, i);
 
                 Destroy(itemInstance.gameObject);
 
@@ -322,14 +405,6 @@ namespace Unity.FPS.Gameplay
 
             return distanceBetweenSlots;
         }
-
-        void OnItemSwitched(ItemController newItem)
-        {
-            if (newItem != null)
-            {
-                newItem.Equip(true);
-            }
-        }
     }
 
     // Could be worth making a ScriptableObject if lots of systems end up wanting to use this
@@ -354,6 +429,7 @@ namespace Unity.FPS.Gameplay
         public Vector3 LastCharacterPosition;
         public Vector3 WeaponMainLocalPosition;
         public Vector3 WeaponBobLocalPosition;
+        public float BobMultiplier = 1f;
 
         public ItemController GetActiveItem() => GetItemAtSlotIndex(ActiveItemIndex);
 

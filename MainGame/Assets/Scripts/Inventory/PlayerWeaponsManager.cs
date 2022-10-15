@@ -8,24 +8,11 @@ namespace Unity.FPS.Gameplay
     [RequireComponent(typeof(PlayerInputHandler), typeof(PlayerInventoryManager))]
     public class PlayerWeaponsManager : InventorySystem
     {
-
         [Tooltip("Position for weapons when aiming")]
         public Transform AimingWeaponPosition;
 
-
-
-        [Header("Weapon Bob")]
-        [Tooltip("Frequency at which the weapon will move around in the screen when the player is in movement")]
-        public float BobFrequency = 10f;
-
-        [Tooltip("How fast the weapon bob is applied, the bigger value the fastest")]
-        public float BobSharpness = 10f;
-
-        [Tooltip("Distance the weapon bobs when not aiming")]
-        public float DefaultBobAmount = 0.05f;
-
         [Tooltip("Distance the weapon bobs when aiming")]
-        public float AimingBobAmount = 0.02f;
+        public float AimingBobMultiplier = 0.02f;
 
         [Header("Weapon Recoil")]
         [Tooltip("This will affect how fast the recoil moves the weapon, the bigger the value, the fastest")]
@@ -54,18 +41,21 @@ namespace Unity.FPS.Gameplay
 
         PlayerInputHandler _inputHandler;
         PlayerCharacterController _playerCharacterController;
-        float _weaponBobFactor;
-
         Vector3 _weaponRecoilLocalPosition;
         Vector3 _accumulatedRecoil;
 
-
-        void Start()
+        public override void Initialize(PlayerInventoryData playerInventoryData)
         {
+            base.Initialize(playerInventoryData);
+
             _inputHandler = gameObject.GetComponentOrThrow<PlayerInputHandler>();
             _playerCharacterController = gameObject.GetComponentOrThrow<PlayerCharacterController>();
-
             _playerCharacterController.SetFov(DefaultFov);
+        }
+        public override void OnAddItem(ItemController item, int index)
+        {
+            Debug.Log($"Addeded weapon {item.WeaponName}");
+            OnAddedWeapon.Invoke(item as WeaponController, index);
         }
 
         public override bool SupportsItemType(ItemController itemController)
@@ -73,7 +63,6 @@ namespace Unity.FPS.Gameplay
             return itemController is WeaponController;
         }
 
-        // TODO version using types?        
         public WeaponController GetActiveWeapon()
         {
             if(PlayerInventoryData.GetActiveItem() is WeaponController weaponController) return weaponController;
@@ -92,12 +81,17 @@ namespace Unity.FPS.Gameplay
             return null;
         }
 
+        public override void SwitchToItem(ItemController newItem)
+        {
+            OnSwitchedToWeapon.Invoke(newItem as WeaponController);
+            newItem.Equip(true);
+        }
+
         public override void OnActiveItemUpdate(ItemController itemController)
         {
-            WeaponController weaponController = (WeaponController)itemController;
-            
-            // shoot handling
-            WeaponController activeWeapon = GetActiveWeapon();
+            PlayerInventoryData.BobMultiplier = IsAiming ? AimingBobMultiplier : 1f;
+
+            WeaponController activeWeapon = (WeaponController)itemController;
 
             if (activeWeapon != null && activeWeapon.IsReloading)
                 return;
@@ -146,7 +140,6 @@ namespace Unity.FPS.Gameplay
         void LateUpdate()
         {
             UpdateWeaponAiming();
-            UpdateWeaponBob();
             UpdateWeaponRecoil();
 
             // Set final weapon socket position based on all the combined animation influences
@@ -173,9 +166,10 @@ namespace Unity.FPS.Gameplay
         public override bool CanSwitchItem(ItemController currentlyEquippedItem)
         {
             if(!(currentlyEquippedItem is WeaponController)) return base.CanSwitchItem(currentlyEquippedItem);
+
             WeaponController weaponController = currentlyEquippedItem as WeaponController;
 
-            return base.CanSwitchItem(currentlyEquippedItem) && IsAiming && !weaponController.IsCharging;
+            return base.CanSwitchItem(currentlyEquippedItem) && !IsAiming && !weaponController.IsCharging;
         }
 
         // Updates weapon position and camera FoV for the aiming transition
@@ -199,42 +193,6 @@ namespace Unity.FPS.Gameplay
                     _playerCharacterController.SetFov(Mathf.Lerp(_playerCharacterController.PlayerCamera.fieldOfView, DefaultFov,
                         AimingAnimationSpeed * Time.deltaTime));
                 }
-            }
-        }
-
-        // Updates the weapon bob animation based on character speed
-        void UpdateWeaponBob()
-        {
-            if (Time.deltaTime > 0f)
-            {
-                Vector3 playerCharacterVelocity =
-                    (_playerCharacterController.transform.position - PlayerInventoryData.LastCharacterPosition) / Time.deltaTime;
-
-                // calculate a smoothed weapon bob amount based on how close to our max grounded movement velocity we are
-                float characterMovementFactor = 0f;
-                if (_playerCharacterController.IsGrounded)
-                {
-                    characterMovementFactor =
-                        Mathf.Clamp01(playerCharacterVelocity.magnitude /
-                                      (_playerCharacterController.MaxSpeedOnGround *
-                                       _playerCharacterController.SprintSpeedModifier));
-                }
-
-                _weaponBobFactor =
-                    Mathf.Lerp(_weaponBobFactor, characterMovementFactor, BobSharpness * Time.deltaTime);
-
-                // Calculate vertical and horizontal weapon bob values based on a sine function
-                float bobAmount = IsAiming ? AimingBobAmount : DefaultBobAmount;
-                float frequency = BobFrequency;
-                float hBobValue = Mathf.Sin(Time.time * frequency) * bobAmount * _weaponBobFactor;
-                float vBobValue = ((Mathf.Sin(Time.time * frequency * 2f) * 0.5f) + 0.5f) * bobAmount *
-                                  _weaponBobFactor;
-
-                // Apply weapon bob
-                PlayerInventoryData.WeaponBobLocalPosition.x = hBobValue;
-                PlayerInventoryData.WeaponBobLocalPosition.y = Mathf.Abs(vBobValue);
-
-                PlayerInventoryData.LastCharacterPosition = _playerCharacterController.transform.position;
             }
         }
 

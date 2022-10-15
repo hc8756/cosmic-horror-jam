@@ -14,18 +14,27 @@ namespace Unity.FPS.UI
         public GameObject AmmoCounterPrefab;
 
         PlayerWeaponsManager _playerWeaponsManager;
-        List<AmmoCounter> m_AmmoCounters = new List<AmmoCounter>();
+        List<AmmoCounter> _ammoCounters = new List<AmmoCounter>();
 
         void Start()
         {
             _playerWeaponsManager = FindObjectOfType<PlayerWeaponsManager>();
             DebugUtility.HandleErrorIfNullFindObject<PlayerWeaponsManager, WeaponHUDManager>(_playerWeaponsManager, this);
+            
+            int i = 0;
+            foreach(ItemController item in _playerWeaponsManager.PlayerInventoryData.Inventory)
+            {
+                if(item is WeaponController w)
+                {
+                    AddWeapon(w, i);
+                }
+                i++;
+            }
 
             WeaponController activeWeapon = _playerWeaponsManager.GetActiveWeapon();
 
             if (activeWeapon)
             {
-                AddWeapon(activeWeapon, _playerWeaponsManager.PlayerInventoryData.ActiveItemIndex);
                 ChangeWeapon(activeWeapon);
             }
 
@@ -36,6 +45,7 @@ namespace Unity.FPS.UI
 
         void AddWeapon(WeaponController newWeapon, int weaponIndex)
         {
+            Debug.Log("Adding weapon to UI now!");
             GameObject ammoCounterInstance = Instantiate(AmmoCounterPrefab, AmmoPanel);
             AmmoCounter newAmmoCounter = ammoCounterInstance.GetComponent<AmmoCounter>();
             DebugUtility.HandleErrorIfNullGetComponent<AmmoCounter, WeaponHUDManager>(newAmmoCounter, this,
@@ -43,24 +53,24 @@ namespace Unity.FPS.UI
 
             newAmmoCounter.Initialize(newWeapon, weaponIndex);
 
-            m_AmmoCounters.Add(newAmmoCounter);
+            _ammoCounters.Add(newAmmoCounter);
         }
 
         void RemoveWeapon(WeaponController newWeapon, int weaponIndex)
         {
             int foundCounterIndex = -1;
-            for (int i = 0; i < m_AmmoCounters.Count; i++)
+            for (int i = 0; i < _ammoCounters.Count; i++)
             {
-                if (m_AmmoCounters[i].WeaponCounterIndex == weaponIndex)
+                if (_ammoCounters[i].WeaponCounterIndex == weaponIndex)
                 {
                     foundCounterIndex = i;
-                    Destroy(m_AmmoCounters[i].gameObject);
+                    Destroy(_ammoCounters[i].gameObject);
                 }
             }
 
             if (foundCounterIndex >= 0)
             {
-                m_AmmoCounters.RemoveAt(foundCounterIndex);
+                _ammoCounters.RemoveAt(foundCounterIndex);
             }
         }
 

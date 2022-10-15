@@ -1,17 +1,17 @@
 using System.Collections;
-using System.Collections.Generic;
+using System;
 using Unity.FPS.Gameplay;
 using UnityEngine;
 
 public abstract class InventorySystem : MonoBehaviour
 {
-    public PlayerInventoryData PlayerInventoryData;
+    [NonSerialized] public PlayerInventoryData PlayerInventoryData;
 
     public abstract bool SupportsItemType(ItemController itemController);
 
     public virtual bool CanSwitchItem(ItemController currentlyEquippedItem)
     {
-        return true;
+        return PlayerInventoryData.CurrentItemSwitchState == ItemSwitchState.Up || PlayerInventoryData.CurrentItemSwitchState == ItemSwitchState.Down;
     }
 
     public virtual void OnActiveItemUpdate(ItemController itemController)
