@@ -12,13 +12,10 @@ public class InteractablesManager : MonoBehaviour
     private RaycastHit _hit;
     private Interactable _currentInteractable;
 
-    private void Start()
-    {
-        _ray = new Ray(mainCamera.transform.position, mainCamera.transform.forward);
-    }
-
     private void Update()
     {
+        _ray = new Ray(mainCamera.transform.position, mainCamera.transform.forward);
+        Debug.DrawRay(_ray.origin, _ray.direction, Color.green);
         if(!Physics.SphereCast(_ray, raycastWidth, out _hit)) return;
         Interactable interactable = _hit.collider.GetComponent<Interactable>();
 
