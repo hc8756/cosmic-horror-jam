@@ -8,8 +8,6 @@ public class OnTouchRaiseEvent : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("RAISING!");
-
         CustomObjectData message = new CustomObjectData()
         {
             playerWhoTouchedObject = other.gameObject,

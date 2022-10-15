@@ -93,13 +93,13 @@ namespace Unity.FPS.Gameplay
             {
                 if (!m_AudioSource.isPlaying
                     && currentAmmoRatio != 1
-                    && m_Weapon.IsWeaponActive
+                    && m_Weapon.IsItemActive
                     && m_Weapon.IsCooling)
                 {
                     m_AudioSource.Play();
                 }
                 else if (m_AudioSource.isPlaying
-                         && (currentAmmoRatio == 1 || !m_Weapon.IsWeaponActive || !m_Weapon.IsCooling))
+                         && (currentAmmoRatio == 1 || !m_Weapon.IsItemActive || !m_Weapon.IsCooling))
                 {
                     m_AudioSource.Stop();
                     return;

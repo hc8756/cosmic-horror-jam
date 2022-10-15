@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TouchEventListener :  EventHandler<CustomObjectData>
 {
-    public override void OnEventRaised(CustomObjectData data)
+    public override void RaiseEvent(CustomObjectData data)
     {
         Debug.Log($"Object touched name is {data.objectTouched.name} player name is {data.playerWhoTouchedObject.name} message is {data.message}");
     }

@@ -18,7 +18,7 @@ namespace Unity.FPS.UI
 
         }
         
-        public override void OnEventRaised(string notification)
+        public override void RaiseEvent(string notification)
         {
             HandleNewNotification(notification);
         }

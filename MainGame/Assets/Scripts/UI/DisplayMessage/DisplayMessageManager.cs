@@ -21,7 +21,7 @@ namespace Unity.FPS.UI
             m_PendingMessages = new List<Message>();
         }
 
-        public override void OnEventRaised(string message)
+        public override void RaiseEvent(string message)
         {
             NotificationToast notification = Instantiate(MessagePrefab, DisplayMessageRect.transform).GetComponent<NotificationToast>();
 
