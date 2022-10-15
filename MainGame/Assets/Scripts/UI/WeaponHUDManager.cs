@@ -13,25 +13,25 @@ namespace Unity.FPS.UI
         [Tooltip("Prefab for displaying weapon ammo")]
         public GameObject AmmoCounterPrefab;
 
-        PlayerWeaponsManager m_PlayerWeaponsManager;
+        PlayerWeaponsManager _playerWeaponsManager;
         List<AmmoCounter> m_AmmoCounters = new List<AmmoCounter>();
 
         void Start()
         {
-            m_PlayerWeaponsManager = FindObjectOfType<PlayerWeaponsManager>();
-            DebugUtility.HandleErrorIfNullFindObject<PlayerWeaponsManager, WeaponHUDManager>(m_PlayerWeaponsManager,
-                this);
+            _playerWeaponsManager = FindObjectOfType<PlayerWeaponsManager>();
+            DebugUtility.HandleErrorIfNullFindObject<PlayerWeaponsManager, WeaponHUDManager>(_playerWeaponsManager, this);
 
-            WeaponController activeWeapon = m_PlayerWeaponsManager.GetActiveWeapon();
+            WeaponController activeWeapon = _playerWeaponsManager.GetActiveWeapon();
+
             if (activeWeapon)
             {
-                AddWeapon(activeWeapon, m_PlayerWeaponsManager.ActiveWeaponIndex);
+                AddWeapon(activeWeapon, _playerWeaponsManager.PlayerInventoryData.ActiveItemIndex);
                 ChangeWeapon(activeWeapon);
             }
 
-            m_PlayerWeaponsManager.OnAddedWeapon += AddWeapon;
-            m_PlayerWeaponsManager.OnRemovedWeapon += RemoveWeapon;
-            m_PlayerWeaponsManager.OnSwitchedToWeapon += ChangeWeapon;
+            _playerWeaponsManager.OnAddedWeapon += AddWeapon;
+            _playerWeaponsManager.OnRemovedWeapon += RemoveWeapon;
+            _playerWeaponsManager.OnSwitchedToWeapon += ChangeWeapon;
         }
 
         void AddWeapon(WeaponController newWeapon, int weaponIndex)

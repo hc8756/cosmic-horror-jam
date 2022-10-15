@@ -22,21 +22,14 @@ namespace Unity.FPS.Gameplay
 
         protected override void OnPicked(PlayerCharacterController byPlayer)
         {
-            PlayerWeaponsManager playerWeaponsManager = byPlayer.GetComponent<PlayerWeaponsManager>();
-            if (playerWeaponsManager)
-            {
-                if (playerWeaponsManager.AddWeapon(WeaponPrefab))
-                {
-                    // Handle auto-switching to weapon if no weapons currently
-                    if (playerWeaponsManager.GetActiveWeapon() == null)
-                    {
-                        playerWeaponsManager.SwitchWeapon(true);
-                    }
+            PlayerInventoryManager playerInventoryManager = byPlayer.GetComponent<PlayerInventoryManager>();
+            if(!playerInventoryManager) return;
 
-                    PlayPickupFeedback();
-                    Destroy(gameObject);
-                }
-            }
+            playerInventoryManager.AddItem(WeaponPrefab);
+
+            PlayPickupFeedback();
+            Destroy(gameObject);
+
         }
     }
 }

@@ -176,7 +176,7 @@ namespace Unity.FPS.Gameplay
             return false;
         }
 
-        public int GetSwitchWeaponInput()
+        public int GetItemSwitchDirection()
         {
             if (CanProcessInput())
             {

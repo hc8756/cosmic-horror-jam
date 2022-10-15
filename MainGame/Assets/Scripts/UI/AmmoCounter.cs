@@ -23,7 +23,7 @@ namespace Unity.FPS.UI
 
         public int WeaponCounterIndex { get; set; }
 
-        PlayerWeaponsManager m_PlayerWeaponsManager;
+        PlayerWeaponsManager _playerWeaponsManager;
         WeaponController m_Weapon;
 
         // TODO Call from event
@@ -46,8 +46,8 @@ namespace Unity.FPS.UI
                 BulletCounter.text = weapon.GetCarriedPhysicalBullets().ToString();
 
             Reload.gameObject.SetActive(false);
-            m_PlayerWeaponsManager = FindObjectOfType<PlayerWeaponsManager>();
-            DebugUtility.HandleErrorIfNullFindObject<PlayerWeaponsManager, AmmoCounter>(m_PlayerWeaponsManager, this);
+            _playerWeaponsManager = FindObjectOfType<PlayerWeaponsManager>();
+            DebugUtility.HandleErrorIfNullFindObject<PlayerWeaponsManager, AmmoCounter>(_playerWeaponsManager, this);
 
             WeaponIndexText.text = (WeaponCounterIndex + 1).ToString();
 
@@ -62,7 +62,7 @@ namespace Unity.FPS.UI
 
             BulletCounter.text = m_Weapon.GetCarriedPhysicalBullets().ToString();
 
-            bool isActiveWeapon = m_Weapon == m_PlayerWeaponsManager.GetActiveWeapon();
+            bool isActiveWeapon = m_Weapon == _playerWeaponsManager.GetActiveWeapon();
 
             CanvasGroup.alpha = Mathf.Lerp(CanvasGroup.alpha, isActiveWeapon ? 1f : UnselectedOpacity,
                 Time.deltaTime * 10);
@@ -71,7 +71,7 @@ namespace Unity.FPS.UI
                 
             FillBarColorChange.UpdateVisual(currenFillRatio);
 
-            Reload.gameObject.SetActive(m_Weapon.GetCarriedPhysicalBullets() > 0 && m_Weapon.GetCurrentAmmo() == 0 && m_Weapon.IsWeaponActive);
+            Reload.gameObject.SetActive(m_Weapon.GetCarriedPhysicalBullets() > 0 && m_Weapon.GetCurrentAmmo() == 0 && m_Weapon.IsItemActive);
         }
     }
 }

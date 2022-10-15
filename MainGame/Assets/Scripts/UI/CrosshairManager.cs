@@ -11,7 +11,7 @@ namespace Unity.FPS.UI
         public Sprite NullCrosshairSprite;
         public float CrosshairUpdateshrpness = 5f;
 
-        PlayerWeaponsManager m_WeaponsManager;
+        PlayerWeaponsManager _playerWeaponsManager;
         bool m_WasPointingAtEnemy;
         RectTransform m_CrosshairRectTransform;
         CrosshairData m_CrosshairDataDefault;
@@ -20,18 +20,16 @@ namespace Unity.FPS.UI
 
         void Start()
         {
-            m_WeaponsManager = GameObject.FindObjectOfType<PlayerWeaponsManager>();
-            DebugUtility.HandleErrorIfNullFindObject<PlayerWeaponsManager, CrosshairManager>(m_WeaponsManager, this);
+            _playerWeaponsManager = UnityHelper.FindObjectOfTypeOrThrow<PlayerWeaponsManager>();
 
-            OnWeaponChanged(m_WeaponsManager.GetActiveWeapon());
-
-            m_WeaponsManager.OnSwitchedToWeapon += OnWeaponChanged;
+            OnWeaponChanged(_playerWeaponsManager.GetActiveWeapon());
+            _playerWeaponsManager.OnSwitchedToWeapon += OnWeaponChanged;
         }
-
+        
         void Update()
         {
             UpdateCrosshairPointingAtEnemy(false);
-            m_WasPointingAtEnemy = m_WeaponsManager.IsPointingAtEnemy;
+            m_WasPointingAtEnemy = _playerWeaponsManager.IsPointingAtEnemy;
         }
 
         void UpdateCrosshairPointingAtEnemy(bool force)
@@ -39,13 +37,13 @@ namespace Unity.FPS.UI
             if (m_CrosshairDataDefault.CrosshairSprite == null)
                 return;
 
-            if ((force || !m_WasPointingAtEnemy) && m_WeaponsManager.IsPointingAtEnemy)
+            if ((force || !m_WasPointingAtEnemy) && _playerWeaponsManager.IsPointingAtEnemy)
             {
                 m_CurrentCrosshair = m_CrosshairDataTarget;
                 CrosshairImage.sprite = m_CurrentCrosshair.CrosshairSprite;
                 m_CrosshairRectTransform.sizeDelta = m_CurrentCrosshair.CrosshairSize * Vector2.one;
             }
-            else if ((force || m_WasPointingAtEnemy) && !m_WeaponsManager.IsPointingAtEnemy)
+            else if ((force || m_WasPointingAtEnemy) && !_playerWeaponsManager.IsPointingAtEnemy)
             {
                 m_CurrentCrosshair = m_CrosshairDataDefault;
                 CrosshairImage.sprite = m_CurrentCrosshair.CrosshairSprite;

@@ -26,14 +26,8 @@ namespace Unity.FPS.Game
     }
 
     [RequireComponent(typeof(AudioSource))]
-    public class WeaponController : MonoBehaviour
+    public class WeaponController : ItemController
     {
-        [Header("Information")] [Tooltip("The name that will be displayed in the UI for this weapon")]
-        public string WeaponName;
-
-        [Tooltip("The image that will be displayed in the UI for this weapon")]
-        public Sprite WeaponIcon;
-
         [Tooltip("Default data for the crosshair")]
         public CrosshairData CrosshairDataDefault;
 
@@ -139,11 +133,9 @@ namespace Unity.FPS.Game
         public float LastChargeTriggerTimestamp { get; private set; }
         Vector3 m_LastMuzzlePosition;
 
-        public GameObject Owner { get; set; }
-        public GameObject SourcePrefab { get; set; }
+
         public bool IsCharging { get; private set; }
         public float CurrentAmmoRatio { get; private set; }
-        public bool IsWeaponActive { get; private set; }
         public bool IsCooling { get; private set; }
         public float CurrentCharge { get; private set; }
         public Vector3 MuzzleWorldVelocity { get; private set; }
@@ -326,7 +318,7 @@ namespace Unity.FPS.Game
             }
         }
 
-        public void ShowWeapon(bool show)
+        public override void Equip(bool show)
         {
             WeaponRoot.SetActive(show);
 
@@ -335,7 +327,7 @@ namespace Unity.FPS.Game
                 m_ShootAudioSource.PlayOneShot(ChangeWeaponSfx);
             }
 
-            IsWeaponActive = show;
+            IsItemActive = show;
         }
 
         public void UseAmmo(float amount)
