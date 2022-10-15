@@ -318,6 +318,7 @@ GameObject:
   - component: {fileID: 1661717823}
   - component: {fileID: 3591115438752502688}
   - component: {fileID: 298744117520805562}
+  - component: {fileID: 4347574081036398392}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -737,18 +738,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6b4f98e62f1d104f8658bba08e5d56f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerInventoryData:
-    Inventory: []
-    WeaponCamera: {fileID: 0}
-    WeaponParentSocket: {fileID: 0}
-    DefaultWeaponPosition: {fileID: 0}
-    DownWeaponPosition: {fileID: 0}
-    ActiveItemIndex: 0
-    CurrentItemSwitchState: 0
-    LastCharacterPosition: {x: 0, y: 0, z: 0}
-    WeaponMainLocalPosition: {x: 0, y: 0, z: 0}
-    WeaponBobLocalPosition: {x: 0, y: 0, z: 0}
-    BobMultiplier: 1
   AimingWeaponPosition: {fileID: 6033319682454824337}
   AimingBobMultiplier: 0.02
   RecoilSharpness: 50
@@ -756,6 +745,19 @@ MonoBehaviour:
   RecoilRestitutionSharpness: 10
   AimingAnimationSpeed: 14
   DefaultFov: 60
+--- !u!114 &4347574081036398392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7253983127304857660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9caf74e4cea5354b9b44645aca10988, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainCamera: {fileID: 8303093099919959869}
 --- !u!1 &7383874627095517793
 GameObject:
   m_ObjectHideFlags: 0
