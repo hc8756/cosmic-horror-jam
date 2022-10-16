@@ -15,9 +15,9 @@ namespace Unity.FPS.UI
         private InteractablesManager _interactablesManager;
         private bool _wasPointingAtEnemy;
         private RectTransform _crosshairRectTransform;
-        private CrosshairData _crosshairDataDefault;
-        private CrosshairData _crosshairDataTarget;
-        private CrosshairData _currentCrosshair;
+        private CrosshairConfig _crosshairDataDefault;
+        private CrosshairConfig _crosshairDataTarget;
+        private CrosshairConfig _currentCrosshair;
 
         void Start()
         {
@@ -37,7 +37,7 @@ namespace Unity.FPS.UI
 
         void UpdateCrosshairPointingAtEnemy(bool force)
         {
-            if (_crosshairDataDefault.CrosshairSprite == null)
+            if (_crosshairDataDefault == null || _crosshairDataDefault.CrosshairSprite == null)
                 return;
 
             if ((force || !_wasPointingAtEnemy) && _playerWeaponsManager.IsPointingAtEnemy)

@@ -5,7 +5,7 @@ using Unity.FPS.Game;
 
 public abstract class Interactable : MonoBehaviour
 {
-    public CrosshairData crosshairData;
+    public CrosshairConfig crosshairData;
     public virtual void OnPlayerHover(Ray ray, RaycastHit hit)
     {
     }

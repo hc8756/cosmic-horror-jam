@@ -319,14 +319,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77746c574d5991a4290cdcadf57df2cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  crosshairData:
-    CrosshairSprite: {fileID: 963966538, guid: 117563cfd38d99a46baef108b36b0b41, type: 3}
-    CrosshairSize: 25
-    CrosshairColor: {r: 1, g: 1, b: 1, a: 1}
-  crosshairDataTarget:
-    CrosshairSprite: {fileID: 963966538, guid: 117563cfd38d99a46baef108b36b0b41, type: 3}
-    CrosshairSize: 25
-    CrosshairColor: {r: 1, g: 1, b: 1, a: 1}
+  crosshairData: {fileID: 11400000, guid: b439246974bf65b478da30b6f9c29094, type: 2}
   releaseDelay: 0.1
 --- !u!1 &478347491 stripped
 GameObject:

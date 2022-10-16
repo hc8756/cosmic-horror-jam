@@ -12,27 +12,14 @@ namespace Unity.FPS.Game
         Charge,
     }
 
-    [System.Serializable]
-    public struct CrosshairData
-    {
-        [Tooltip("The image that will be used for this weapon's crosshair")]
-        public Sprite CrosshairSprite;
-
-        [Tooltip("The size of the crosshair image")]
-        public int CrosshairSize;
-
-        [Tooltip("The color of the crosshair image")]
-        public Color CrosshairColor;
-    }
-
     [RequireComponent(typeof(AudioSource))]
     public class WeaponController : ItemController
     {
         [Tooltip("Default data for the crosshair")]
-        public CrosshairData CrosshairDataDefault;
+        public CrosshairConfig CrosshairDataDefault;
 
         [Tooltip("Data for the crosshair when targeting an enemy")]
-        public CrosshairData CrosshairDataTargetInSight;
+        public CrosshairConfig CrosshairDataTargetInSight;
 
         [Header("Internal References")]
         [Tooltip("The root object for the weapon, this is what will be deactivated when the weapon isn't active")]
