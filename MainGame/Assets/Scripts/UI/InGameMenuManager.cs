@@ -30,6 +30,9 @@ namespace Unity.FPS.UI
         Health m_PlayerHealth;
         FramerateCounter m_FramerateCounter;
 
+        //Added by Ashley
+        private GameObject Puzzle;
+
         void Start()
         {
             m_PlayerInputsHandler = FindObjectOfType<PlayerInputHandler>();
@@ -41,6 +44,10 @@ namespace Unity.FPS.UI
 
             m_FramerateCounter = FindObjectOfType<FramerateCounter>();
             DebugUtility.HandleErrorIfNullFindObject<FramerateCounter, InGameMenuManager>(m_FramerateCounter, this);
+
+            //Added by Ashley
+            Puzzle = GameObject.FindWithTag("Puzzle");
+
 
             MenuRoot.SetActive(false);
 
@@ -85,6 +92,18 @@ namespace Unity.FPS.UI
                     EventSystem.current.SetSelectedGameObject(null);
                     LookSensitivitySlider.Select();
                 }
+            }
+
+            //Added by Ashley
+            if (Puzzle && Puzzle.GetComponent<Canvas>().enabled && !MenuRoot.activeSelf)
+            {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+                Time.timeScale = 0f;
+                EventSystem.current.SetSelectedGameObject(null);
+            }
+            else if(Puzzle && !Puzzle.GetComponent<Canvas>().enabled && !MenuRoot.activeSelf ) {
+                ClosePauseMenu();
             }
         }
 
