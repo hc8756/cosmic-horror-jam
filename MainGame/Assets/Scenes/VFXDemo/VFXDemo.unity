@@ -265,7 +265,7 @@ PrefabInstance:
     - target: {fileID: 8950624839484268201, guid: 2a8f5052fe50f7b41b17149abb0f7414,
         type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8950624839484268201, guid: 2a8f5052fe50f7b41b17149abb0f7414,
         type: 3}
@@ -911,7 +911,7 @@ GameObject:
   - component: {fileID: 1796193338}
   - component: {fileID: 1796193337}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: ExplosionStand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -995,7 +995,7 @@ Transform:
   - {fileID: 395119695}
   - {fileID: 1892683671}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1892683670
 GameObject:
