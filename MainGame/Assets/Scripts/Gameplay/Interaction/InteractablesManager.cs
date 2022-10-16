@@ -23,6 +23,7 @@ public class InteractablesManager : MonoBehaviour
         if(Physics.SphereCast(_ray, raycastWidth, out _hit, maxDistance))
         {
             Interactable interactable = _hit.collider.GetComponent<Interactable>();
+            if(!interactable) interactable = _hit.collider.GetComponentInParent<Interactable>();
 
             if(!interactable)
             {

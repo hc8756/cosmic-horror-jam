@@ -8,6 +8,7 @@ public class GameEventHandler : MonoBehaviour, IGameEventListener
 {
     public GameEvent gameEvent;
     public UnityEvent unityEvent;
+    public UltEvents.UltEvent ultEvent;
 
     private void OnEnable()
     {
@@ -17,6 +18,9 @@ public class GameEventHandler : MonoBehaviour, IGameEventListener
     public void OnEventRaised()
     {
         unityEvent.Invoke();
+
+        if(ultEvent != null)
+            ultEvent.Invoke();
     }
 
     private void OnDisable()
