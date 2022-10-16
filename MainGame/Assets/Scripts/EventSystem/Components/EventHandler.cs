@@ -12,7 +12,8 @@ public abstract class EventHandler<T> : MonoBehaviour, IGameEventListener<T>
 
     public virtual void OnEnable()
     {
-        gameEvent.RegisterListener(this);
+        if(gameEvent)
+            gameEvent.RegisterListener(this);
     }
 
     public void OnEventRaised(T data)
@@ -26,6 +27,7 @@ public abstract class EventHandler<T> : MonoBehaviour, IGameEventListener<T>
 
     public virtual void OnDisable()
     {
-        gameEvent.UnregisterListener(this);
+        if(gameEvent)
+            gameEvent.UnregisterListener(this);
     }
 }

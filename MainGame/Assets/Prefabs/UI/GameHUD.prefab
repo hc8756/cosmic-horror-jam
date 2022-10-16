@@ -1679,7 +1679,6 @@ GameObject:
   - component: {fileID: 8914494409660412361}
   - component: {fileID: 4408840208916598594}
   - component: {fileID: 804804969663160542}
-  - component: {fileID: 4692738559174620312}
   - component: {fileID: 1845787234550258351}
   - component: {fileID: 1610334969856411743}
   m_Layer: 5
@@ -1798,25 +1797,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cc74ffbc49331241b49395553802a02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unityEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  gameEvent: {fileID: 11400000, guid: 335e8eb1c0100e14cb9eab7ca954e6d8, type: 2}
   NotificationPanel: {fileID: 4785774642944489473}
   NotificationPrefab: {fileID: 8322339850511969721, guid: 791e30b832d8b814c82d519317a16e6d,
-    type: 3}
---- !u!114 &4692738559174620312
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5413294659218134590}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6df5ceb43b5e7254f90afdf178b9cc04, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObjectivePanel: {fileID: 8034244941416248752}
-  PrimaryObjectivePrefab: {fileID: 8322339850511969721, guid: 825d6b0d7b3a7394a9f51c7b6900c135,
-    type: 3}
-  SecondaryObjectivePrefab: {fileID: 8322339850511969721, guid: 418abff609b9b754ba25e34faf58edf4,
     type: 3}
 --- !u!114 &1845787234550258351
 MonoBehaviour:
@@ -1845,6 +1831,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f05022e63392c3c499c70ac5ae3b5d4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unityEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  gameEvent: {fileID: 11400000, guid: e52db5db032919c43af2370824d21b7b, type: 2}
   DisplayMessageRect: {fileID: 9119402869326549703}
   MessagePrefab: {fileID: 876710413839154128, guid: dbfc7742a2f49bf42a9a012e4ec4b773,
     type: 3}

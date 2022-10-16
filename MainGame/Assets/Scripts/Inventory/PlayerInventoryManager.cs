@@ -19,8 +19,6 @@ namespace Unity.FPS.Gameplay
         [Tooltip("Distance the weapon bobs when not aiming")]
         public float DefaultBobAmount = 0.05f;
 
-
-
         public PlayerInventoryData PlayerInventoryData;
         public List<ItemController> StartingItems = new List<ItemController>();
         
@@ -38,7 +36,7 @@ namespace Unity.FPS.Gameplay
         
         float _weaponBobFactor;
 
-        void Start()
+        void Awake()
         {
             _subsystems = GetComponents<InventorySystem>();
             if(_subsystems == null) throw new InvalidOperationException("You need at least one InventorySystem to use PlayerInventoryManager.");
