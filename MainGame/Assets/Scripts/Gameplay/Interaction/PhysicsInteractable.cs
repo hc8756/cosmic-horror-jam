@@ -6,6 +6,7 @@ using DG.Tweening;
 [RequireComponent(typeof(Rigidbody))]
 public class PhysicsInteractable : Interactable
 {
+    public float releaseDelay = 1f;
     private Rigidbody _rigidbody;
     private RigidbodyInterpolation _initialInterp;
     // Unused but useful for rotation
@@ -31,15 +32,15 @@ public class PhysicsInteractable : Interactable
 
         // Track rigidbody's initial information
         _initialInterp = _rigidbody.interpolation;
-        _rotationDifferenceEuler = transform.rotation.eulerAngles - camera.rotation.eulerAngles;
+        // _rotationDifferenceEuler = transform.rotation.eulerAngles - camera.rotation.eulerAngles;
 
         // hitOffsetLocal = transform.InverseTransformVector(hit.point - hit.transform.position);
         _currentGrabDistance = Vector3.Distance(ray.origin, hit.point);
 
         // Set rigidbody's interpolation for proper collision detection when being moved by the player
         _rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
-        // _rigidbody.isKinematic = true;
-        _rigidbody.gameObject.layer
+        _rigidbody.isKinematic = true;
+        _rigidbody.gameObject.layer = LayerMask.NameToLayer("DoesNotCollideWithPlayer");
     }
 
     private void Update()
@@ -49,8 +50,8 @@ public class PhysicsInteractable : Interactable
         if(Input.GetMouseButtonUp(0))
         {
             _active = false;
-            _rigidbody.interpolation = _initialInterp;
-            // _rigidbody.isKinematic = false;
+            StartCoroutine(ReleaseObject());
+
             return;
         }
 
@@ -58,5 +59,15 @@ public class PhysicsInteractable : Interactable
         Vector3 holdPoint = ray.GetPoint(_currentGrabDistance);
 
        _rigidbody.DOMove(holdPoint, Time.deltaTime);
+    }
+
+    // Releasing immediately creates physics bugs
+    private IEnumerator ReleaseObject()
+    {
+        yield return new WaitForSeconds(releaseDelay);
+
+        _rigidbody.interpolation = _initialInterp;
+        _rigidbody.gameObject.layer = 0;
+        _rigidbody.isKinematic = false;
     }
 }

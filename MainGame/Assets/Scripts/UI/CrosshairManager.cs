@@ -93,7 +93,7 @@ namespace Unity.FPS.UI
             {
                 CrosshairImage.enabled = true;
                 _crosshairDataDefault = interactable.crosshairData;
-                _crosshairDataTarget = _crosshairDataDefault;
+                _crosshairDataTarget = interactable.crosshairDataTarget;
                 _crosshairRectTransform = CrosshairImage.GetComponent<RectTransform>();
                 DebugUtility.HandleErrorIfNullGetComponent<RectTransform, CrosshairManager>(_crosshairRectTransform,
                     this, CrosshairImage.gameObject);
