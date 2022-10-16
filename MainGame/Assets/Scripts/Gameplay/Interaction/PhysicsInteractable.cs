@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using Unity.FPS.Gameplay;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PhysicsInteractable : Interactable
@@ -13,9 +14,14 @@ public class PhysicsInteractable : Interactable
     private Vector3 _rotationDifferenceEuler;
     private bool _active;
     private float _currentGrabDistance;
+    private FixedJoint _fixedJoint;
 
+    private Rigidbody _playerCameraRB;
     private void Start()
     {
+        PlayerCharacterController _player = UnityHelper.FindObjectOfTypeOrThrow<PlayerCharacterController>();
+        _playerCameraRB = _player.WeaponCamera.gameObject.GetComponentOrThrow<Rigidbody>();
+
         _rigidbody = gameObject.GetComponentOrThrow<Rigidbody>();
     }
     
@@ -28,18 +34,20 @@ public class PhysicsInteractable : Interactable
         if(!Input.GetMouseButtonDown(0)) return;
         _active = true;
 
+        _fixedJoint = gameObject.AddComponent<FixedJoint>();
+        _fixedJoint.connectedBody = _playerCameraRB;
+
         Transform camera = Camera.main.transform;
 
-        // Track rigidbody's initial information
-        _initialInterp = _rigidbody.interpolation;
-        // _rotationDifferenceEuler = transform.rotation.eulerAngles - camera.rotation.eulerAngles;
+        // // Track rigidbody's initial information
+        // _initialInterp = _rigidbody.interpolation;
+        // // _rotationDifferenceEuler = transform.rotation.eulerAngles - camera.rotation.eulerAngles;
 
-        // hitOffsetLocal = transform.InverseTransformVector(hit.point - hit.transform.position);
-        _currentGrabDistance = Vector3.Distance(ray.origin, hit.point);
+        // // hitOffsetLocal = transform.InverseTransformVector(hit.point - hit.transform.position);
+        // _currentGrabDistance = Vector3.Distance(ray.origin, hit.point);
 
         // Set rigidbody's interpolation for proper collision detection when being moved by the player
         _rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
-        _rigidbody.isKinematic = true;
         _rigidbody.gameObject.layer = LayerMask.NameToLayer("DoesNotCollideWithPlayer");
     }
 
@@ -55,10 +63,10 @@ public class PhysicsInteractable : Interactable
             return;
         }
 
-        Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
-        Vector3 holdPoint = ray.GetPoint(_currentGrabDistance);
+        // Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
+        // Vector3 holdPoint = ray.GetPoint(_currentGrabDistance);
 
-       _rigidbody.DOMove(holdPoint, Time.deltaTime);
+    //    _rigidbody.DOMove(holdPoint, Time.deltaTime);
     }
 
     // Releasing immediately creates physics bugs
@@ -68,6 +76,7 @@ public class PhysicsInteractable : Interactable
 
         _rigidbody.interpolation = _initialInterp;
         _rigidbody.gameObject.layer = 0;
-        _rigidbody.isKinematic = false;
+
+        Destroy(_fixedJoint);
     }
 }
