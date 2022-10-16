@@ -93,7 +93,7 @@ namespace Unity.FPS.UI
             {
                 CrosshairImage.enabled = true;
                 _crosshairDataDefault = interactable.crosshairData;
-                _crosshairDataTarget = interactable.crosshairDataTarget;
+                _crosshairDataTarget = interactable.crosshairData;
                 _crosshairRectTransform = CrosshairImage.GetComponent<RectTransform>();
                 DebugUtility.HandleErrorIfNullGetComponent<RectTransform, CrosshairManager>(_crosshairRectTransform,
                     this, CrosshairImage.gameObject);
@@ -110,7 +110,7 @@ namespace Unity.FPS.UI
                 }
             }
 
-            UpdateCrosshairPointingAtEnemy(false);
+            UpdateCrosshairPointingAtEnemy(true);
         }
     }
 }
