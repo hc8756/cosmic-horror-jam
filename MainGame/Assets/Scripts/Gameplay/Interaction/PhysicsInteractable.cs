@@ -7,8 +7,8 @@ using DG.Tweening;
 public class PhysicsInteractable : Interactable
 {
     private Rigidbody _rigidbody;
-
     private RigidbodyInterpolation _initialInterp;
+    // Unused but useful for rotation
     private Vector3 _rotationDifferenceEuler;
     private bool _active;
     private float _currentGrabDistance;
@@ -20,6 +20,7 @@ public class PhysicsInteractable : Interactable
     
     public override void OnPlayerHover(Ray ray, RaycastHit hit)
     {
+        if(_active) return;
         // No support for throwing yet but just put this somewhere in response to an input action and it will work
         // rigidbody.AddForce(Camera.main.transform.forward * throwForce, ForceMode.Impulse);
 
@@ -37,21 +38,25 @@ public class PhysicsInteractable : Interactable
 
         // Set rigidbody's interpolation for proper collision detection when being moved by the player
         _rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
+        // _rigidbody.isKinematic = true;
+        _rigidbody.gameObject.layer
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         if(!_active) return;
-
+        
         if(Input.GetMouseButtonUp(0))
         {
             _active = false;
             _rigidbody.interpolation = _initialInterp;
+            // _rigidbody.isKinematic = false;
+            return;
         }
 
         Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
         Vector3 holdPoint = ray.GetPoint(_currentGrabDistance);
 
-        _rigidbody.DOMove(holdPoint, Time.fixedDeltaTime);
+       _rigidbody.DOMove(holdPoint, Time.deltaTime);
     }
 }
