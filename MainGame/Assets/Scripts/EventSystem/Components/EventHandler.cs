@@ -6,7 +6,9 @@ using UnityEngine.Events;
 public abstract class EventHandler<T> : MonoBehaviour, IGameEventListener<T>
 {
     // If you assing to this unity event, it will be inboked when the event is raised.
+    // You can use either the ultEvent or unityEvent
     public UnityEvent<T> unityEvent;
+    public UltEvents.UltEvent<T> ultEvent;
 
     public Event<T> gameEvent;
 
@@ -19,6 +21,9 @@ public abstract class EventHandler<T> : MonoBehaviour, IGameEventListener<T>
     public void OnEventRaised(T data)
     {
         unityEvent.Invoke(data);
+
+        if(ultEvent != null)
+            ultEvent.Invoke(data);
 
         RaiseEvent(data);
     }

@@ -14,7 +14,6 @@ public class InteractablesManager : MonoBehaviour
     private RaycastHit _hit;
     private Interactable _currentInteractable;
     
-
     private void Update()
     {
         _ray = new Ray(mainCamera.transform.position, mainCamera.transform.forward);
@@ -23,33 +22,28 @@ public class InteractablesManager : MonoBehaviour
         if(Physics.SphereCast(_ray, raycastWidth, out _hit, maxDistance))
         {
             Interactable interactable = _hit.collider.GetComponent<Interactable>();
-
-            if(!interactable)
+            if(!interactable) interactable = _hit.collider.GetComponentInParent<Interactable>();
+            
+            if(interactable)
             {
-                if(_currentInteractable)
+                if(interactable != _currentInteractable || _currentInteractable == null)
                 {
-                    OnHoveredInteractableChanged.Invoke(null);
-                    _currentInteractable = null;
+                    _currentInteractable = interactable;
+                    OnHoveredInteractableChanged.Invoke(_currentInteractable);
                 }
 
-                return;
+                _currentInteractable.OnPlayerHover(_ray, _hit);
             }
-
-            if(interactable != _currentInteractable)
-            {
-                _currentInteractable = interactable;
-                OnHoveredInteractableChanged.Invoke(_currentInteractable);
-            }
-
-            _currentInteractable.OnPlayerHover(_ray, _hit);
         }
         else
         {
-            if(_currentInteractable)
-            {
-                OnHoveredInteractableChanged.Invoke(null);
-                _currentInteractable = null;
-            }
+            _currentInteractable = null;
+        }
+
+        // Make sure the current interactable still exists
+        if(!_currentInteractable)
+        {
+            OnHoveredInteractableChanged.Invoke(null);
         }
     }
 
