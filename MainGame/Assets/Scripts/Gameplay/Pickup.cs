@@ -56,7 +56,9 @@ namespace Unity.FPS.Gameplay
             if (pickingPlayer != null)
             {
                 OnPicked(pickingPlayer);
-                pickupEvent.Raise(gameObject);
+
+                if(pickupEvent)
+                    pickupEvent.Raise(gameObject);
             }
         }
 

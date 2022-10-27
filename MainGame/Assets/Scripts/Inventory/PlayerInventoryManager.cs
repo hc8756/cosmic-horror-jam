@@ -8,7 +8,6 @@ namespace Unity.FPS.Gameplay
 {
     public class PlayerInventoryManager : MonoBehaviour
     {
-        
         [Header("Weapon Bob")]
         [Tooltip("Frequency at which the weapon will move around in the screen when the player is in movement")]
         public float BobFrequency = 10f;
@@ -27,6 +26,8 @@ namespace Unity.FPS.Gameplay
 
         [Tooltip("Delay before switching item a second time, to avoid recieving multiple inputs from mouse wheel")]
         public float WeaponSwitchDelay = 1f;
+
+        public UnityAction<string> OnItemAdded;
 
         PlayerInputHandler _inputHandler;
         PlayerCharacterController _playerCharacterController;
@@ -287,6 +288,23 @@ namespace Unity.FPS.Gameplay
                     }
                 }
             }
+        }
+
+        // Non equippable items
+        private Dictionary<string, int> _hiddenItems = new Dictionary<string, int>();
+        
+        public void AddHiddenItem(string itemName)
+        {
+            if(_hiddenItems.TryGetValue(itemName, out int value))
+            {
+                value++;
+            }
+            else
+            {
+                _hiddenItems.Add(itemName, 1);
+            }
+
+            OnItemAdded.Invoke(itemName);
         }
 
         // Adds a weapon to our inventory

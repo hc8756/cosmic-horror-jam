@@ -12,6 +12,7 @@ public class TweenHelper : MonoBehaviour
     public void TransformDOJump(Transform t, Vector3 endValue, float jumpPower, int numJumps, float duration) 
         => t.DOJump(endValue, jumpPower, numJumps, duration);
     public void TransformDOShakePosition(Transform t, float duration, float strength) => t.DOShakePosition(duration, strength);
+    public void TransformDOLookAt(Transform t, Transform towards, float duration) => t.DOLookAt(towards.position, duration);
 
     // Light
     public void LightDOColor(Light light, Color to, float duration) => light.DOColor(to, duration);
