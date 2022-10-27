@@ -11,9 +11,10 @@ namespace Unity.FPS.UI
 
         void Awake()
         {
-            PlayerWeaponsManager playerWeaponsManager = FindObjectOfType<PlayerWeaponsManager>();
-            DebugUtility.HandleErrorIfNullFindObject<PlayerWeaponsManager, NotificationHUDManager>(playerWeaponsManager,
-                this);
+            PlayerInventoryManager playerInventoryManager = UnityHelper.FindObjectOfTypeOrThrow<PlayerInventoryManager>();
+            playerInventoryManager.OnItemAdded += OnPickupItem;
+
+            PlayerWeaponsManager playerWeaponsManager = UnityHelper.FindObjectOfTypeOrThrow<PlayerWeaponsManager>();
             playerWeaponsManager.OnAddedWeapon += OnPickupWeapon;
 
         }
@@ -33,6 +34,11 @@ namespace Unity.FPS.UI
         {
             if (index != 0)
                 CreateNotification("Picked up weapon : " + weaponController.WeaponName);
+        }
+        
+        void OnPickupItem(string name)
+        {
+            CreateNotification("Picked up " + name);
         }
 
         public void CreateNotification(string text)

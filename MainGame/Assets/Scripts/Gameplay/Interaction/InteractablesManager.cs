@@ -8,7 +8,7 @@ public class InteractablesManager : MonoBehaviour
 {
     public Camera mainCamera;
     public UnityAction<Interactable> OnHoveredInteractableChanged; 
-    private float raycastWidth = 0.5f;
+    public float raycastWidth = 0.25f;
     private float maxDistance = 2f;
     private Ray _ray;
     private RaycastHit _hit;
