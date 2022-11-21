@@ -19,6 +19,17 @@ public class JigsawPuzzle : MonoBehaviour
         if (puzzleSolved) { gameObject.GetComponent<Canvas>().enabled = false; }
     }
 
+    public void ResetPuzzle()
+    {
+        if (!puzzleSolved) {
+            for (int i = 0; i < puzzlePieces.Length; i++)
+            {
+                puzzlePieces[i].GetComponent<PuzzlePiece>().Randomize();
+                puzzlePieces[i].GetComponent<PuzzlePiece>().InRightPosition=false;
+            }
+        }
+    }
+
     public void CheckSolved() {
         bool returnVal = true;
         for (int i = 0; i < puzzlePieces.Length; i++) {

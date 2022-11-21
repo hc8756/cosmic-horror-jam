@@ -13,13 +13,10 @@ public class PuzzlePiece : MonoBehaviour
     {
         RightPosition = transform.position;
         InRightPosition = false;
-        int LeftOrRight = Random.Range(1,3);
-        float newX;
-        if (LeftOrRight == 1) { newX = Random.Range(-350, -200); }
-        else { newX = Random.Range(200, 350); }
-        float newY = Random.Range(-200, 200);
-        transform.position = canvas.transform.TransformPoint(new Vector3(newX, newY));
+        Randomize();
     }
+
+
 
     // Update is called once per frame
     void Update()
@@ -35,6 +32,16 @@ public class PuzzlePiece : MonoBehaviour
         }
     }
 
+    public void Randomize()
+    {
+        int LeftOrRight = Random.Range(1, 3);
+        float newX;
+        if (LeftOrRight == 1) { newX = Random.Range(-350, -200); }
+        else { newX = Random.Range(200, 350); }
+        float newY = Random.Range(-150, 110);
+        transform.position = canvas.transform.TransformPoint(new Vector3(newX, newY));
+    }
+
     public void DragHandler(BaseEventData data)
     {
         PointerEventData pointerData = (PointerEventData)data;
@@ -47,10 +54,6 @@ public class PuzzlePiece : MonoBehaviour
             );
         if (!InRightPosition) {
             transform.position = canvas.transform.TransformPoint(position);
-           
         }
-        
     }
-
-
 }
