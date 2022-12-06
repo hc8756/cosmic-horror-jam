@@ -16,8 +16,6 @@ public class PuzzlePiece : MonoBehaviour
         Randomize();
     }
 
-
-
     // Update is called once per frame
     void Update()
     {

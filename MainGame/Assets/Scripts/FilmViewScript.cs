@@ -10,11 +10,16 @@ public class FilmViewScript : MonoBehaviour
         
     }
 
-    // Update is called once per frame
     void Update()
     {
+        //Old script for world space
+        /*
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mousePosition.z = Camera.main.transform.position.z + Camera.main.nearClipPlane;
+        transform.position = mousePosition;*/
+
+        //New script for canvas space & keeping child still
+        Vector3 mousePosition = Input.mousePosition;
         transform.position = mousePosition;
     }
 }
