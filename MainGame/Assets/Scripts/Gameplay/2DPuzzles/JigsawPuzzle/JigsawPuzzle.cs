@@ -26,7 +26,7 @@ public class JigsawPuzzle : MonoBehaviour
             {
                 puzzlePieces[i].GetComponent<PuzzlePiece>().enabled = false;
             }
-            clueItem.SetActive(true);
+            
         }
         solvedPictureInverse.GetComponent<RectTransform>().position = solvedPicturePos;
     }
@@ -49,6 +49,8 @@ public class JigsawPuzzle : MonoBehaviour
             returnVal = false;
             }
         }
+        if (returnVal) {clueItem.SetActive(true); }
+        
         puzzleSolved = returnVal;
     }
 }
